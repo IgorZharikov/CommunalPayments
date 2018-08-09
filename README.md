@@ -1,2 +1,0 @@
-# CommunalPayments
-test
