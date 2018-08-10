@@ -1,0 +1,85 @@
+10.08.2018 12:13:20	This log contains information about the import schema operation into project 'DatabaseProject' on computer 'ZHARIKOVIA' by user 'ZharikovIa'.
+10.08.2018 12:13:21	Import of database schema has started.
+10.08.2018 12:13:26	Gathering database credentials
+10.08.2018 12:13:26	Gathering database options
+10.08.2018 12:13:26	Gathering generic database scoped configuration option
+10.08.2018 12:13:26	Gathering users
+10.08.2018 12:13:26	Gathering roles
+10.08.2018 12:13:26	Gathering application roles
+10.08.2018 12:13:26	Gathering role memberships
+10.08.2018 12:13:26	Gathering filegroups
+10.08.2018 12:13:26	Gathering full-text catalogs
+10.08.2018 12:13:26	Gathering assemblies
+10.08.2018 12:13:26	Gathering certificates
+10.08.2018 12:13:26	Gathering asymmetric keys
+10.08.2018 12:13:26	Gathering symmetric keys
+10.08.2018 12:13:26	Gathering encrypted symmetric keys
+10.08.2018 12:13:26	Gathering schemas
+10.08.2018 12:13:26	Gathering XML schema collections
+10.08.2018 12:13:26	Gathering user-defined data types
+10.08.2018 12:13:26	Gathering user-defined types
+10.08.2018 12:13:26	Gathering table types
+10.08.2018 12:13:26	Gathering unique keys for table types
+10.08.2018 12:13:26	Gathering primary keys for table types
+10.08.2018 12:13:26	Gathering indexes for table types
+10.08.2018 12:13:26	Gathering check constraints for table types
+10.08.2018 12:13:26	Gathering default constraints for table types
+10.08.2018 12:13:26	Gathering partition functions
+10.08.2018 12:13:26	Gathering partition schemes
+10.08.2018 12:13:26	Gathering functions
+10.08.2018 12:13:27	Gathering encrypted functions
+10.08.2018 12:13:27	Gathering aggregates
+10.08.2018 12:13:27	Gathering procedures
+10.08.2018 12:13:27	Gathering encrypted procedures
+10.08.2018 12:13:27	Gathering tables
+10.08.2018 12:13:27	Gathering primary keys
+10.08.2018 12:13:27	Gathering unique constraints
+10.08.2018 12:13:27	Gathering foreign keys
+10.08.2018 12:13:27	Gathering default constraints
+10.08.2018 12:13:27	Gathering check constraints
+10.08.2018 12:13:27	Gathering views
+10.08.2018 12:13:27	Gathering encrypted views
+10.08.2018 12:13:27	Gathering indexes
+10.08.2018 12:13:27	Gathering statistics
+10.08.2018 12:13:27	Gathering full-text index stoplists
+10.08.2018 12:13:27	Gathering search property lists
+10.08.2018 12:13:27	Gathering search properties
+10.08.2018 12:13:27	Gathering full-text indexes
+10.08.2018 12:13:27	Gathering column store indexes
+10.08.2018 12:13:27	Gathering spatial indexes
+10.08.2018 12:13:27	Gathering XML indexes
+10.08.2018 12:13:27	Gathering Selective XML indexes
+10.08.2018 12:13:27	Gathering encrypted triggers
+10.08.2018 12:13:27	Gathering triggers
+10.08.2018 12:13:27	Gathering encrypted and clr ddl triggers
+10.08.2018 12:13:27	Gathering ddl triggers
+10.08.2018 12:13:27	Gathering synonyms
+10.08.2018 12:13:27	Gathering defaults
+10.08.2018 12:13:27	Gathering data constraint uddt bindings
+10.08.2018 12:13:27	Gathering rules
+10.08.2018 12:13:27	Gathering data constraint uddt bindings
+10.08.2018 12:13:27	Gathering message types
+10.08.2018 12:13:27	Gathering queues
+10.08.2018 12:13:27	Gathering contracts
+10.08.2018 12:13:27	Gathering services
+10.08.2018 12:13:27	Gathering event notifications
+10.08.2018 12:13:27	Gathering remote service bindings
+10.08.2018 12:13:27	Gathering broker priorities
+10.08.2018 12:13:27	Gathering signatures
+10.08.2018 12:13:27	Gathering data compression options
+10.08.2018 12:13:27	Gathering sequence types
+10.08.2018 12:13:27	Gathering security policies
+10.08.2018 12:13:27	Gather column encryption keys
+10.08.2018 12:13:27	Gathering column master keys
+10.08.2018 12:13:27	Gathering external data sources
+10.08.2018 12:13:27	Gathering external file formats
+10.08.2018 12:13:27	Gathering external tables
+10.08.2018 12:13:27	Gathering extended properties
+10.08.2018 12:13:27	Gathering credentials
+10.08.2018 12:13:27	Gathering logins
+10.08.2018 12:13:27	Gathering server audits
+10.08.2018 12:13:29	Scanning project for duplicate elements
+10.08.2018 12:13:29	Finished duplicate element processing
+10.08.2018 12:13:29	Finished importing database.
+10.08.2018 12:13:29	A summary of the import was saved to the following location: D:\Git\CommunalPayments\DatabaseProject\Import Schema Logs\DatabaseProject_20180810081320.log
+10.08.2018 12:13:29	Click Finish to continue...
