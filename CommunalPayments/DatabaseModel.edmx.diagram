@@ -4,14 +4,23 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2d57817f63594533873656596f441f8c" Name="Diagram1">
-        <EntityTypeShape EntityType="CommunalPayments.CommunalServices" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="CommunalPayments.Organizations" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="CommunalPayments.Payers" Width="1.5" PointX="3" PointY="5.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="CommunalPayments.Receipts" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="CommunalPayments.FK_CommunalServices_Organizations" ManuallyRouted="false" />
-        <AssociationConnector Association="CommunalPayments.FK_Receipts_CommunalServices" ManuallyRouted="false" />
-        <AssociationConnector Association="CommunalPayments.FK_Receipts_Payers" ManuallyRouted="false" />
+      <Diagram DiagramId="d70716a1874f4cc697b30abb192e2edd" Name="Diagram1">
+        <EntityTypeShape EntityType="CommunalPaymentsModel.CommunalServicePrices" Width="1.5" PointX="7.375" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.CommunalServices" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.MeasurementDevices" Width="1.5" PointX="1.375" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.MeasurementDeviceTypes" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.Organizations" Width="1.5" PointX="10.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.ServiceDevices" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_CommunalServicePrices_CommunalServices" ManuallyRouted="false" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_CommunalServicePrices_Organizations" ManuallyRouted="false" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_ServiceDevices_CommunalServices" ManuallyRouted="false" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_MeasurementDevices_MeasurementDeviceTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_ServiceDevices_MeasurementDeviceTypes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.Apartments" Width="1.5" PointX="7.875" PointY="1" />
+        <EntityTypeShape EntityType="CommunalPaymentsModel.Receipts" Width="1.5" PointX="5.75" PointY="0.875" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_Receipts_Apartments" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_Receipts_CommunalServices" />
+        <AssociationConnector Association="CommunalPaymentsModel.FK_MeasurementDevices_Receipts" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -4,17 +4,53 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CommunalPayments.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CommunalPaymentsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Apartments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Square" Type="float" Nullable="false" />
+          <Property Name="Residents" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommunalServicePrices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+          <Property Name="OrgId" Type="int" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Units" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BeginDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="CommunalServices">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="OrgId" Type="int" Nullable="false" />
-          <Property Name="Price" Type="float" Nullable="false" />
-          <Property Name="Units" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Rate" Type="float" Nullable="false" />
+          <Property Name="Options" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeasurementDevices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReceiptId" Type="int" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="int" Nullable="false" />
+          <Property Name="InitialValue" Type="float" Nullable="false" />
+          <Property Name="FinalValue" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeasurementDeviceTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Options" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Organizations">
           <Key>
@@ -25,37 +61,83 @@
           <Property Name="Details" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="PersonalAccountNumber" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Payers">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FIO" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="Address" Type="varchar" MaxLength="500" Nullable="false" />
-        </EntityType>
         <EntityType Name="Receipts">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PayerId" Type="int" Nullable="false" />
+          <Property Name="ApartmentId" Type="int" Nullable="false" />
           <Property Name="OperationDate" Type="datetime" Nullable="false" />
           <Property Name="ServiceId" Type="int" Nullable="false" />
           <Property Name="BillingDate" Type="datetime" Nullable="false" />
-          <Property Name="BeginReadout" Type="float" />
-          <Property Name="EndReadout" Type="float" />
           <Property Name="AdditionalFee" Type="float" Nullable="false" />
           <Property Name="Total" Type="float" Nullable="false" />
         </EntityType>
-        <Association Name="FK_CommunalServices_Organizations">
+        <EntityType Name="ServiceDevices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CommunalServicePrices_CommunalServices">
+          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="1" />
+          <End Role="CommunalServicePrices" Type="Self.CommunalServicePrices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CommunalServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommunalServicePrices">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommunalServicePrices_Organizations">
           <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
-          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="*" />
+          <End Role="CommunalServicePrices" Type="Self.CommunalServicePrices" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Organizations">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="CommunalServices">
+            <Dependent Role="CommunalServicePrices">
               <PropertyRef Name="OrgId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeasurementDevices_MeasurementDeviceTypes">
+          <End Role="MeasurementDeviceTypes" Type="Self.MeasurementDeviceTypes" Multiplicity="1" />
+          <End Role="MeasurementDevices" Type="Self.MeasurementDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasurementDeviceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MeasurementDevices">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeasurementDevices_Receipts">
+          <End Role="Receipts" Type="Self.Receipts" Multiplicity="1" />
+          <End Role="MeasurementDevices" Type="Self.MeasurementDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Receipts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MeasurementDevices">
+              <PropertyRef Name="ReceiptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Receipts_Apartments">
+          <End Role="Apartments" Type="Self.Apartments" Multiplicity="1" />
+          <End Role="Receipts" Type="Self.Receipts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Apartments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Receipts">
+              <PropertyRef Name="ApartmentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -71,53 +153,122 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Receipts_Payers">
-          <End Role="Payers" Type="Self.Payers" Multiplicity="1" />
-          <End Role="Receipts" Type="Self.Receipts" Multiplicity="*" />
+        <Association Name="FK_ServiceDevices_CommunalServices">
+          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="1" />
+          <End Role="ServiceDevices" Type="Self.ServiceDevices" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Payers">
+            <Principal Role="CommunalServices">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Receipts">
-              <PropertyRef Name="PayerId" />
+            <Dependent Role="ServiceDevices">
+              <PropertyRef Name="ServiceId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="CommunalPaymentsStoreContainer">
+        <Association Name="FK_ServiceDevices_MeasurementDeviceTypes">
+          <End Role="MeasurementDeviceTypes" Type="Self.MeasurementDeviceTypes" Multiplicity="1" />
+          <End Role="ServiceDevices" Type="Self.ServiceDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasurementDeviceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceDevices">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CommunalPaymentsModelStoreContainer">
+          <EntitySet Name="Apartments" EntityType="Self.Apartments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommunalServicePrices" EntityType="Self.CommunalServicePrices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CommunalServices" EntityType="Self.CommunalServices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeasurementDevices" EntityType="Self.MeasurementDevices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeasurementDeviceTypes" EntityType="Self.MeasurementDeviceTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Organizations" EntityType="Self.Organizations" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Payers" EntityType="Self.Payers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Receipts" EntityType="Self.Receipts" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_CommunalServices_Organizations" Association="Self.FK_CommunalServices_Organizations">
-            <End Role="Organizations" EntitySet="Organizations" />
+          <EntitySet Name="ServiceDevices" EntityType="Self.ServiceDevices" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CommunalServicePrices_CommunalServices" Association="Self.FK_CommunalServicePrices_CommunalServices">
             <End Role="CommunalServices" EntitySet="CommunalServices" />
+            <End Role="CommunalServicePrices" EntitySet="CommunalServicePrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommunalServicePrices_Organizations" Association="Self.FK_CommunalServicePrices_Organizations">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="CommunalServicePrices" EntitySet="CommunalServicePrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasurementDevices_MeasurementDeviceTypes" Association="Self.FK_MeasurementDevices_MeasurementDeviceTypes">
+            <End Role="MeasurementDeviceTypes" EntitySet="MeasurementDeviceTypes" />
+            <End Role="MeasurementDevices" EntitySet="MeasurementDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasurementDevices_Receipts" Association="Self.FK_MeasurementDevices_Receipts">
+            <End Role="Receipts" EntitySet="Receipts" />
+            <End Role="MeasurementDevices" EntitySet="MeasurementDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Receipts_Apartments" Association="Self.FK_Receipts_Apartments">
+            <End Role="Apartments" EntitySet="Apartments" />
+            <End Role="Receipts" EntitySet="Receipts" />
           </AssociationSet>
           <AssociationSet Name="FK_Receipts_CommunalServices" Association="Self.FK_Receipts_CommunalServices">
             <End Role="CommunalServices" EntitySet="CommunalServices" />
             <End Role="Receipts" EntitySet="Receipts" />
           </AssociationSet>
-          <AssociationSet Name="FK_Receipts_Payers" Association="Self.FK_Receipts_Payers">
-            <End Role="Payers" EntitySet="Payers" />
-            <End Role="Receipts" EntitySet="Receipts" />
+          <AssociationSet Name="FK_ServiceDevices_CommunalServices" Association="Self.FK_ServiceDevices_CommunalServices">
+            <End Role="CommunalServices" EntitySet="CommunalServices" />
+            <End Role="ServiceDevices" EntitySet="ServiceDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceDevices_MeasurementDeviceTypes" Association="Self.FK_ServiceDevices_MeasurementDeviceTypes">
+            <End Role="MeasurementDeviceTypes" EntitySet="MeasurementDeviceTypes" />
+            <End Role="ServiceDevices" EntitySet="ServiceDevices" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="CommunalPayments" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="CommunalPaymentsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CommunalServicePrices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+          <Property Name="OrgId" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Units" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CommunalServices" Relationship="Self.FK_CommunalServicePrices_CommunalServices" FromRole="CommunalServicePrices" ToRole="CommunalServices" />
+          <NavigationProperty Name="Organizations" Relationship="Self.FK_CommunalServicePrices_Organizations" FromRole="CommunalServicePrices" ToRole="Organizations" />
+        </EntityType>
         <EntityType Name="CommunalServices">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="OrgId" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Double" Nullable="false" />
-          <Property Name="Units" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Rate" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Organizations" Relationship="Self.FK_CommunalServices_Organizations" FromRole="CommunalServices" ToRole="Organizations" />
-          <NavigationProperty Name="Receipts" Relationship="Self.FK_Receipts_CommunalServices" FromRole="CommunalServices" ToRole="Receipts" />
+          <Property Name="Options" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CommunalServicePrices" Relationship="Self.FK_CommunalServicePrices_CommunalServices" FromRole="CommunalServices" ToRole="CommunalServicePrices" />
+          <NavigationProperty Name="ServiceDevices" Relationship="Self.FK_ServiceDevices_CommunalServices" FromRole="CommunalServices" ToRole="ServiceDevices" />
+          <NavigationProperty Name="Receipts" Relationship="CommunalPaymentsModel.FK_Receipts_CommunalServices" FromRole="CommunalServices" ToRole="Receipts" />
+        </EntityType>
+        <EntityType Name="MeasurementDevices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReceiptId" Type="Int32" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="Int32" Nullable="false" />
+          <Property Name="InitialValue" Type="Double" Nullable="false" />
+          <Property Name="FinalValue" Type="Double" Nullable="false" />
+          <NavigationProperty Name="MeasurementDeviceTypes" Relationship="Self.FK_MeasurementDevices_MeasurementDeviceTypes" FromRole="MeasurementDevices" ToRole="MeasurementDeviceTypes" />
+          <NavigationProperty Name="Receipts" Relationship="CommunalPaymentsModel.FK_MeasurementDevices_Receipts" FromRole="MeasurementDevices" ToRole="Receipts" />
+        </EntityType>
+        <EntityType Name="MeasurementDeviceTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Options" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="MeasurementDevices" Relationship="Self.FK_MeasurementDevices_MeasurementDeviceTypes" FromRole="MeasurementDeviceTypes" ToRole="MeasurementDevices" />
+          <NavigationProperty Name="ServiceDevices" Relationship="Self.FK_ServiceDevices_MeasurementDeviceTypes" FromRole="MeasurementDeviceTypes" ToRole="ServiceDevices" />
         </EntityType>
         <EntityType Name="Organizations">
           <Key>
@@ -127,48 +278,160 @@
           <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Details" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="PersonalAccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="CommunalServices" Relationship="Self.FK_CommunalServices_Organizations" FromRole="Organizations" ToRole="CommunalServices" />
+          <NavigationProperty Name="CommunalServicePrices" Relationship="Self.FK_CommunalServicePrices_Organizations" FromRole="Organizations" ToRole="CommunalServicePrices" />
         </EntityType>
-        <EntityType Name="Payers">
+        <EntityType Name="ServiceDevices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CommunalServices" Relationship="Self.FK_ServiceDevices_CommunalServices" FromRole="ServiceDevices" ToRole="CommunalServices" />
+          <NavigationProperty Name="MeasurementDeviceTypes" Relationship="Self.FK_ServiceDevices_MeasurementDeviceTypes" FromRole="ServiceDevices" ToRole="MeasurementDeviceTypes" />
+        </EntityType>
+        <Association Name="FK_CommunalServicePrices_CommunalServices">
+          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="1" />
+          <End Role="CommunalServicePrices" Type="Self.CommunalServicePrices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CommunalServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommunalServicePrices">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommunalServicePrices_Organizations">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+          <End Role="CommunalServicePrices" Type="Self.CommunalServicePrices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CommunalServicePrices">
+              <PropertyRef Name="OrgId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceDevices_CommunalServices">
+          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="1" />
+          <End Role="ServiceDevices" Type="Self.ServiceDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CommunalServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceDevices">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeasurementDevices_MeasurementDeviceTypes">
+          <End Role="MeasurementDeviceTypes" Type="Self.MeasurementDeviceTypes" Multiplicity="1" />
+          <End Role="MeasurementDevices" Type="Self.MeasurementDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasurementDeviceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MeasurementDevices">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceDevices_MeasurementDeviceTypes">
+          <End Role="MeasurementDeviceTypes" Type="Self.MeasurementDeviceTypes" Multiplicity="1" />
+          <End Role="ServiceDevices" Type="Self.ServiceDevices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasurementDeviceTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceDevices">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelDB" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CommunalServicePrices" EntityType="Self.CommunalServicePrices" />
+          <EntitySet Name="CommunalServices" EntityType="Self.CommunalServices" />
+          <EntitySet Name="MeasurementDevices" EntityType="Self.MeasurementDevices" />
+          <EntitySet Name="MeasurementDeviceTypes" EntityType="Self.MeasurementDeviceTypes" />
+          <EntitySet Name="Organizations" EntityType="Self.Organizations" />
+          <EntitySet Name="ServiceDevices" EntityType="Self.ServiceDevices" />
+          <AssociationSet Name="FK_CommunalServicePrices_CommunalServices" Association="Self.FK_CommunalServicePrices_CommunalServices">
+            <End Role="CommunalServices" EntitySet="CommunalServices" />
+            <End Role="CommunalServicePrices" EntitySet="CommunalServicePrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommunalServicePrices_Organizations" Association="Self.FK_CommunalServicePrices_Organizations">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="CommunalServicePrices" EntitySet="CommunalServicePrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceDevices_CommunalServices" Association="Self.FK_ServiceDevices_CommunalServices">
+            <End Role="CommunalServices" EntitySet="CommunalServices" />
+            <End Role="ServiceDevices" EntitySet="ServiceDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasurementDevices_MeasurementDeviceTypes" Association="Self.FK_MeasurementDevices_MeasurementDeviceTypes">
+            <End Role="MeasurementDeviceTypes" EntitySet="MeasurementDeviceTypes" />
+            <End Role="MeasurementDevices" EntitySet="MeasurementDevices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceDevices_MeasurementDeviceTypes" Association="Self.FK_ServiceDevices_MeasurementDeviceTypes">
+            <End Role="MeasurementDeviceTypes" EntitySet="MeasurementDeviceTypes" />
+            <End Role="ServiceDevices" EntitySet="ServiceDevices" />
+          </AssociationSet>
+          <EntitySet Name="Apartments" EntityType="CommunalPaymentsModel.Apartments" />
+          <EntitySet Name="Receipts" EntityType="CommunalPaymentsModel.Receipts" />
+          <AssociationSet Name="FK_Receipts_Apartments" Association="CommunalPaymentsModel.FK_Receipts_Apartments">
+            <End Role="Apartments" EntitySet="Apartments" />
+            <End Role="Receipts" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Receipts_CommunalServices" Association="CommunalPaymentsModel.FK_Receipts_CommunalServices">
+            <End Role="CommunalServices" EntitySet="CommunalServices" />
+            <End Role="Receipts" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeasurementDevices_Receipts" Association="CommunalPaymentsModel.FK_MeasurementDevices_Receipts">
+            <End Role="Receipts" EntitySet="Receipts" />
+            <End Role="MeasurementDevices" EntitySet="MeasurementDevices" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Apartments">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FIO" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Receipts" Relationship="Self.FK_Receipts_Payers" FromRole="Payers" ToRole="Receipts" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Square" Type="Double" Nullable="false" />
+          <Property Name="Residents" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Receipts" Relationship="CommunalPaymentsModel.FK_Receipts_Apartments" FromRole="Apartments" ToRole="Receipts" />
         </EntityType>
         <EntityType Name="Receipts">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PayerId" Type="Int32" Nullable="false" />
+          <Property Name="ApartmentId" Type="Int32" Nullable="false" />
           <Property Name="OperationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ServiceId" Type="Int32" Nullable="false" />
           <Property Name="BillingDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="BeginReadout" Type="Double" />
-          <Property Name="EndReadout" Type="Double" />
           <Property Name="AdditionalFee" Type="Double" Nullable="false" />
           <Property Name="Total" Type="Double" Nullable="false" />
-          <NavigationProperty Name="CommunalServices" Relationship="Self.FK_Receipts_CommunalServices" FromRole="Receipts" ToRole="CommunalServices" />
-          <NavigationProperty Name="Payers" Relationship="Self.FK_Receipts_Payers" FromRole="Receipts" ToRole="Payers" />
+          <NavigationProperty Name="Apartments" Relationship="CommunalPaymentsModel.FK_Receipts_Apartments" FromRole="Receipts" ToRole="Apartments" />
+          <NavigationProperty Name="CommunalServices" Relationship="CommunalPaymentsModel.FK_Receipts_CommunalServices" FromRole="Receipts" ToRole="CommunalServices" />
+          <NavigationProperty Name="MeasurementDevices" Relationship="CommunalPaymentsModel.FK_MeasurementDevices_Receipts" FromRole="Receipts" ToRole="MeasurementDevices" />
         </EntityType>
-        <Association Name="FK_CommunalServices_Organizations">
-          <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
-          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="*" />
+        <Association Name="FK_Receipts_Apartments">
+          <End Type="CommunalPaymentsModel.Apartments" Role="Apartments" Multiplicity="1" />
+          <End Type="CommunalPaymentsModel.Receipts" Role="Receipts" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Organizations">
+            <Principal Role="Apartments">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="CommunalServices">
-              <PropertyRef Name="OrgId" />
+            <Dependent Role="Receipts">
+              <PropertyRef Name="ApartmentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Receipts_CommunalServices">
-          <End Role="CommunalServices" Type="Self.CommunalServices" Multiplicity="1" />
-          <End Role="Receipts" Type="Self.Receipts" Multiplicity="*" />
+          <End Type="CommunalPaymentsModel.CommunalServices" Role="CommunalServices" Multiplicity="1" />
+          <End Type="CommunalPaymentsModel.Receipts" Role="Receipts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CommunalServices">
               <PropertyRef Name="Id" />
@@ -178,56 +441,68 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Receipts_Payers">
-          <End Role="Payers" Type="Self.Payers" Multiplicity="1" />
-          <End Role="Receipts" Type="Self.Receipts" Multiplicity="*" />
+        <Association Name="FK_MeasurementDevices_Receipts">
+          <End Type="CommunalPaymentsModel.Receipts" Role="Receipts" Multiplicity="1" />
+          <End Type="CommunalPaymentsModel.MeasurementDevices" Role="MeasurementDevices" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Payers">
+            <Principal Role="Receipts">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Receipts">
-              <PropertyRef Name="PayerId" />
+            <Dependent Role="MeasurementDevices">
+              <PropertyRef Name="ReceiptId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="CommunalPaymentsEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="CommunalServices" EntityType="Self.CommunalServices" />
-          <EntitySet Name="Organizations" EntityType="Self.Organizations" />
-          <EntitySet Name="Payers" EntityType="Self.Payers" />
-          <EntitySet Name="Receipts" EntityType="Self.Receipts" />
-          <AssociationSet Name="FK_CommunalServices_Organizations" Association="Self.FK_CommunalServices_Organizations">
-            <End Role="Organizations" EntitySet="Organizations" />
-            <End Role="CommunalServices" EntitySet="CommunalServices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Receipts_CommunalServices" Association="Self.FK_Receipts_CommunalServices">
-            <End Role="CommunalServices" EntitySet="CommunalServices" />
-            <End Role="Receipts" EntitySet="Receipts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Receipts_Payers" Association="Self.FK_Receipts_Payers">
-            <End Role="Payers" EntitySet="Payers" />
-            <End Role="Receipts" EntitySet="Receipts" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="CommunalPaymentsStoreContainer" CdmEntityContainer="CommunalPaymentsEntities">
-          <EntitySetMapping Name="CommunalServices">
-            <EntityTypeMapping TypeName="CommunalPayments.CommunalServices">
-              <MappingFragment StoreEntitySet="CommunalServices">
+        <EntityContainerMapping StorageEntityContainer="CommunalPaymentsModelStoreContainer" CdmEntityContainer="ModelDB">
+          <EntitySetMapping Name="CommunalServicePrices">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.CommunalServicePrices">
+              <MappingFragment StoreEntitySet="CommunalServicePrices">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="OrgId" ColumnName="OrgId" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Units" ColumnName="Units" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommunalServices">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.CommunalServices">
+              <MappingFragment StoreEntitySet="CommunalServices">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Options" ColumnName="Options" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeasurementDevices">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.MeasurementDevices">
+              <MappingFragment StoreEntitySet="MeasurementDevices">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ReceiptId" ColumnName="ReceiptId" />
+                <ScalarProperty Name="DeviceTypeId" ColumnName="DeviceTypeId" />
+                <ScalarProperty Name="InitialValue" ColumnName="InitialValue" />
+                <ScalarProperty Name="FinalValue" ColumnName="FinalValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeasurementDeviceTypes">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.MeasurementDeviceTypes">
+              <MappingFragment StoreEntitySet="MeasurementDeviceTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Options" ColumnName="Options" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Organizations">
-            <EntityTypeMapping TypeName="CommunalPayments.Organizations">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.Organizations">
               <MappingFragment StoreEntitySet="Organizations">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -236,27 +511,35 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Payers">
-            <EntityTypeMapping TypeName="CommunalPayments.Payers">
-              <MappingFragment StoreEntitySet="Payers">
+          <EntitySetMapping Name="ServiceDevices">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.ServiceDevices">
+              <MappingFragment StoreEntitySet="ServiceDevices">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FIO" ColumnName="FIO" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="DeviceTypeId" ColumnName="DeviceTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Apartments">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.Apartments">
+              <MappingFragment StoreEntitySet="Apartments">
+                <ScalarProperty Name="Residents" ColumnName="Residents" />
+                <ScalarProperty Name="Square" ColumnName="Square" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Receipts">
-            <EntityTypeMapping TypeName="CommunalPayments.Receipts">
+            <EntityTypeMapping TypeName="CommunalPaymentsModel.Receipts">
               <MappingFragment StoreEntitySet="Receipts">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="PayerId" ColumnName="PayerId" />
-                <ScalarProperty Name="OperationDate" ColumnName="OperationDate" />
-                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
-                <ScalarProperty Name="BillingDate" ColumnName="BillingDate" />
-                <ScalarProperty Name="BeginReadout" ColumnName="BeginReadout" />
-                <ScalarProperty Name="EndReadout" ColumnName="EndReadout" />
-                <ScalarProperty Name="AdditionalFee" ColumnName="AdditionalFee" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AdditionalFee" ColumnName="AdditionalFee" />
+                <ScalarProperty Name="BillingDate" ColumnName="BillingDate" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="OperationDate" ColumnName="OperationDate" />
+                <ScalarProperty Name="ApartmentId" ColumnName="ApartmentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

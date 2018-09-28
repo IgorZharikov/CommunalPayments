@@ -17,7 +17,7 @@ namespace CommunalPayments
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Organizations()
         {
-            this.CommunalServices = new HashSet<CommunalServices>();
+            this.CommunalServicePrices = new HashSet<CommunalServicePrices>();
         }
     
         public int Id { get; set; }
@@ -26,6 +26,6 @@ namespace CommunalPayments
         public string PersonalAccountNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CommunalServices> CommunalServices { get; set; }
+        public virtual ICollection<CommunalServicePrices> CommunalServicePrices { get; set; }
     }
 }

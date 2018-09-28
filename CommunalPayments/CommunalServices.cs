@@ -17,17 +17,19 @@ namespace CommunalPayments
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CommunalServices()
         {
+            this.CommunalServicePrices = new HashSet<CommunalServicePrices>();
+            this.ServiceDevices = new HashSet<ServiceDevices>();
             this.Receipts = new HashSet<Receipts>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public int OrgId { get; set; }
-        public double Price { get; set; }
-        public string Units { get; set; }
-        public double Rate { get; set; }
+        public string Options { get; set; }
     
-        public virtual Organizations Organizations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CommunalServicePrices> CommunalServicePrices { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ServiceDevices> ServiceDevices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Receipts> Receipts { get; set; }
     }

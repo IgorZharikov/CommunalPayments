@@ -13,10 +13,10 @@ namespace CommunalPayments
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class CommunalPaymentsEntities : DbContext
+    public partial class ModelDB : DbContext
     {
-        public CommunalPaymentsEntities()
-            : base("name=CommunalPaymentsEntities")
+        public ModelDB()
+            : base("name=ModelDB")
         {
         }
     
@@ -25,9 +25,13 @@ namespace CommunalPayments
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<CommunalServicePrices> CommunalServicePrices { get; set; }
         public virtual DbSet<CommunalServices> CommunalServices { get; set; }
+        public virtual DbSet<MeasurementDevices> MeasurementDevices { get; set; }
+        public virtual DbSet<MeasurementDeviceTypes> MeasurementDeviceTypes { get; set; }
         public virtual DbSet<Organizations> Organizations { get; set; }
-        public virtual DbSet<Payers> Payers { get; set; }
+        public virtual DbSet<ServiceDevices> ServiceDevices { get; set; }
+        public virtual DbSet<Apartments> Apartments { get; set; }
         public virtual DbSet<Receipts> Receipts { get; set; }
     }
 }

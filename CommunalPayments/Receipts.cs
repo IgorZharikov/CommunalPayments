@@ -14,17 +14,23 @@ namespace CommunalPayments
     
     public partial class Receipts
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Receipts()
+        {
+            this.MeasurementDevices = new HashSet<MeasurementDevices>();
+        }
+    
         public int Id { get; set; }
-        public int PayerId { get; set; }
+        public int ApartmentId { get; set; }
         public System.DateTime OperationDate { get; set; }
         public int ServiceId { get; set; }
         public System.DateTime BillingDate { get; set; }
-        public Nullable<double> BeginReadout { get; set; }
-        public Nullable<double> EndReadout { get; set; }
         public double AdditionalFee { get; set; }
         public double Total { get; set; }
     
+        public virtual Apartments Apartments { get; set; }
         public virtual CommunalServices CommunalServices { get; set; }
-        public virtual Payers Payers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MeasurementDevices> MeasurementDevices { get; set; }
     }
 }
